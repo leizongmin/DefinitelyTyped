@@ -1,6 +1,4 @@
-// Example uses styled-components, but styled-system works with most other css-in-js libraries as well
 import * as React from "react";
-import styled from "styled-components";
 import {
     themeGet,
     space,
@@ -85,14 +83,6 @@ import {
     BackgroundPositionProps,
     BackgroundRepeatProps,
     BackgroundSizeProps,
-    hover,
-    HoverProps,
-    focus,
-    FocusProps,
-    active,
-    ActiveProps,
-    disabled,
-    DisabledProps,
     GridGapProps,
     GridRowGapProps,
     GridColumnGapProps,
@@ -112,8 +102,44 @@ import {
     gridAutoRows,
     gridAutoColumns,
     gridTemplateColumns,
-    gridTemplateRows
+    gridTemplateRows,
+    bgColor,
+    BgColorProps,
+    border,
+    borderBottom,
+    borderLeft,
+    borderRight,
+    borderTop,
+    BorderProps,
+    textStyle,
+    colorStyle,
+    buttonStyle,
+    variant,
+    mixed,
+    ColorStyleProps,
+    TextStyleProps,
+    VariantArgs,
+    ButtonStyleProps,
+    MixedProps,
+    VerticalAlignProps,
+    verticalAlign,
+    px,
+    createMediaQuery
 } from "styled-system";
+
+// tslint:disable-next-line:strict-export-declare-modifiers
+declare const styled: (...props: any[]) => React.ComponentType;
+
+const breakpoints = [480, 960];
+
+const breakpointsPx = breakpoints.map(px);
+
+const mediaQueries = breakpoints.map(createMediaQuery);
+
+const boxStyle = variant({
+    prop: 'boxStyle',
+    key: 'box',
+});
 
 interface BoxProps
     extends SpaceProps,
@@ -122,6 +148,7 @@ interface BoxProps
         ColorProps,
         DisplayProps,
         BackgroundProps,
+        BgColorProps,
         MaxWidthProps,
         MinWidthProps,
         HeightProps,
@@ -133,6 +160,7 @@ interface BoxProps
         FlexProps,
         JustifySelfProps,
         AlignSelfProps,
+        BorderProps,
         BordersProps,
         BorderRadiusProps,
         PositionProps,
@@ -146,13 +174,14 @@ interface BoxProps
         BackgroundPositionProps,
         BackgroundRepeatProps,
         BackgroundSizeProps,
-        HoverProps,
-        FocusProps,
-        ActiveProps,
-        DisabledProps {}
-const Box = styled.div.attrs<BoxProps>({})`
-
-border-radius: ${themeGet("radii.small", "4px")};
+        ColorStyleProps,
+        TextStyleProps,
+        MixedProps,
+        VerticalAlignProps {
+            boxStyle?: string;
+        }
+const Box: React.ComponentType<BoxProps> = styled`
+  border-radius: ${themeGet("radii.small", "4px")};
   ${space}
   ${width}
   ${fontSize}
@@ -170,7 +199,12 @@ border-radius: ${themeGet("radii.small", "4px")};
   ${flex}
   ${justifySelf}
   ${alignSelf}
+  ${border}
   ${borders}
+  ${borderTop}
+  ${borderRight}
+  ${borderBottom}
+  ${borderLeft}
   ${borderRadius}
   ${position}
   ${zIndex}
@@ -183,11 +217,19 @@ border-radius: ${themeGet("radii.small", "4px")};
   ${backgroundPosition}
   ${backgroundRepeat}
   ${backgroundSize}
-  ${hover}
-  ${focus}
-  ${active}
-  ${disabled}
+  ${alignContent}
+  ${alignItems}
+  ${bgColor}
+  ${backgroundImage}
+  ${textStyle}
+  ${colorStyle}
+  ${mixed}
+  ${verticalAlign}
 `;
+
+Box.defaultProps = {
+    boxStyle: 'normal',
+};
 
 interface TextProps
     extends FontSizeProps,
@@ -196,7 +238,7 @@ interface TextProps
         LineHeightProps,
         FontWeightProps,
         LetterSpacingProps {}
-const Text = styled.div.attrs<TextProps>({})`
+const Text: React.ComponentType<TextProps> = styled`
     ${fontSize};
     ${fontFamily};
     ${textAlign};
@@ -212,7 +254,7 @@ interface FlexComponentProps
         FlexWrapProps,
         FlexBasisProps,
         FlexDirectionProps {}
-const Flex = styled.div.attrs<FlexComponentProps>({})`
+const Flex: React.ComponentType<FlexComponentProps> = styled`
     ${alignItems};
     ${alignContent};
     ${justifyContent};
@@ -232,7 +274,7 @@ interface GridComponentProps
         GridAutoRowsProps,
         GridTemplatesRowsProps,
         GridTemplatesColumnsProps {}
-const Grid = styled.div.attrs<GridComponentProps>({})`
+const Grid: React.ComponentType<GridComponentProps> = styled`
     ${gridGap};
     ${gridRowGap};
     ${gridColumnGap};
@@ -243,6 +285,15 @@ const Grid = styled.div.attrs<GridComponentProps>({})`
     ${gridAutoColumns};
     ${gridTemplateRows};
     ${gridTemplateColumns};
+`;
+
+interface ButtonProps
+    extends SpaceProps,
+        ButtonStyleProps {}
+
+const TestButton: React.ComponentType<ButtonProps> = styled`
+    ${buttonStyle}
+    ${space}
 `;
 
 const test = () => (
@@ -348,7 +399,6 @@ const test = () => (
         <Flex justifyContent="center" />
         // flexWrap (responsive)
         <Flex flexWrap="wrap" />
-        <Flex wrap="wrap" />
         // flexBasis (responsive)
         <Flex flexBasis="auto" />
         // flexDirection (responsive)
@@ -411,14 +461,9 @@ const test = () => (
             backgroundPosition="center"
             backgroundRepeat="repeat-x"
         />
-        <Box
-            hover={{
-                textDecoration: "underline",
-                color: "blue"
-            }}
-        />
-        <Box focus={{ color: "blue" }} />
-        <Box active={{ color: "navy" }} />
-        <Box disabledStyle={{ color: "gray" }} />
+        // verticalAlign
+        <Box verticalAlign="middle" />
+
+        <TestButton variant="primary" m={2} />
     </div>
 );

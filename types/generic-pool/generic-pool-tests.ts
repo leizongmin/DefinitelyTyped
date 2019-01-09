@@ -41,11 +41,14 @@ const opts = {
 
 const pool = genericPool.createPool<Connection>(factory, opts);
 
+pool.start();
+
 pool.use((conn: Connection) => 'test')
     .then((result: string) => { });
 
 pool.acquire()
     .then((conn: Connection) => {
+        console.log(pool.isBorrowedResource(conn));  // => true
         return pool.release(conn);
     }).then(() => {
         return pool.acquire(5);

@@ -133,6 +133,7 @@ conn1.openSet('mongodb://localhost/test', 'db', {
 conn1.close().catch(function (err) {});
 conn1.collection('name').$format(999);
 conn1.model('myModel', new mongoose.Schema({}), 'myCol').find();
+conn1.deleteModel('myModel');
 interface IStatics {
   staticMethod1: (a: number) => string;
 }
@@ -262,7 +263,7 @@ schema.method('name', cb).method({
 });
 schema.path('a', mongoose.Schema.Types.Buffer).path('a');
 schema.pathType('m1').toLowerCase();
-schema.plugin(function (schema, opts) {
+schema.plugin(function (schema: mongoose.Schema, opts?: any) {
   schema.get('path');
   if (opts) {
     opts.hasOwnProperty('');
@@ -424,7 +425,7 @@ new mongoose.Schema({
   if (options && options['index']) {
     schema.path('lastMod').index(options['index'])
   }
-});
+}, {index: true});
 
 // plugins
 interface PluginOption {

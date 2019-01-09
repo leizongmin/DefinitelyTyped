@@ -66,7 +66,7 @@ const routeResolver: RouteResolver<Attrs, RRState> & RRState = {
 	}
 };
 
-route(document.body!, '/', {
+route(document.body, '/', {
 	'/': component1,
 	'/test1': {
 		onmatch(args, path) {
@@ -89,7 +89,7 @@ route(document.body!, '/', {
 	test4: {
 		onmatch(args, path) {
 			// Must provide a Promise type if we want type checking
-			return new Promise<Component<{title: string}, {}>>((resolve, reject) => {
+			return new Promise<Component<{title: string}>>((resolve, reject) => {
 				resolve(component2);
 			});
 		}

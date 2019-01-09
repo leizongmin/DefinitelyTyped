@@ -16,7 +16,13 @@ export interface TransitionActions {
     exit?: boolean;
 }
 
-export type TransitionChildren = React.ReactNode | ((status: string) => React.ReactNode);
+export type TransitionStatus =
+    typeof ENTERING |
+    typeof ENTERED |
+    typeof EXITING |
+    typeof EXITED |
+    typeof UNMOUNTED;
+export type TransitionChildren = React.ReactNode | ((status: TransitionStatus) => React.ReactNode);
 export interface TransitionProps extends TransitionActions {
     in?: boolean;
     mountOnEnter?: boolean;
@@ -51,7 +57,7 @@ export interface TransitionProps extends TransitionActions {
  *
  * const defaultStyle = {
  *   transition: `opacity ${duration}ms ease-in-out`,
- *   opactity: 0,
+ *   opacity: 0,
  * }
  *
  * const transitionStyles = {

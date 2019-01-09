@@ -3467,7 +3467,7 @@ fp.now(); // $ExpectType number
         delete(key: string) { return true; },
         get(key: string): any { return 1; },
         has(key: string) { return true; },
-        set(key: string, value: any): _.Dictionary<any> { return {}; },
+        set(key: string, value: any): _.MapCache { return this; },
         clear() { },
     };
 
@@ -3484,6 +3484,11 @@ fp.now(); // $ExpectType number
 
     // $ExpectType MapCache
     new _.memoize.Cache();
+    _.memoize.Cache = WeakMap;
+    _.memoize.Cache = Map;
+    const memoizedFn = _.memoize(memoizeFn);
+    memoizedFn.cache = new WeakMap();
+    memoizedFn.cache = new Map();
 }
 
 // _.overArgs
@@ -4200,7 +4205,7 @@ fp.now(); // $ExpectType number
 
 // _.isMatchWith
 {
-    const testIsMatchCustiomizerFn = (value: any, other: any, indexOrKey: number|string|symbol) => true;
+    const testIsMatchCustiomizerFn = (value: any, other: any, indexOrKey: number|string|symbol, object: object, source: object) => true;
 
     _.isMatchWith({}, {}, testIsMatchCustiomizerFn); // $ExpectType boolean
     _({}).isMatchWith({}, testIsMatchCustiomizerFn); // $ExpectType boolean
@@ -5631,9 +5636,19 @@ fp.now(); // $ExpectType number
 
     const mixedDictionary: _.Dictionary<string | number> | null | undefined = anything;
 
-    _.pickBy(mixedDictionary, (item: string | number): item is number => typeof item === "number"); // $ExpectType Dictionary<number>
-    _(mixedDictionary).pickBy((item: string | number): item is number => typeof item === "number"); // $ExpectType LoDashImplicitWrapper<Dictionary<number>>
-    _.chain(mixedDictionary).pickBy((item: string | number): item is number => typeof item === "number"); // $ExpectType LoDashExplicitWrapper<Dictionary<number>>
+    const userDefinedTypeGuard = (item: string | number): item is number => typeof item === "number";
+
+    _.pickBy(mixedDictionary, userDefinedTypeGuard); // $ExpectType Dictionary<number>
+    _(mixedDictionary).pickBy(userDefinedTypeGuard); // $ExpectType LoDashImplicitWrapper<Dictionary<number>>
+    _.chain(mixedDictionary).pickBy(userDefinedTypeGuard); // $ExpectType LoDashExplicitWrapper<Dictionary<number>>
+    fp.pickBy(userDefinedTypeGuard)(mixedDictionary); // $ExpectType Dictionary<number>
+
+    const mixedNumericDictionary: _.NumericDictionary<string | number> | null | undefined = anything;
+
+    _.pickBy(mixedNumericDictionary, userDefinedTypeGuard); // $ExpectType NumericDictionary<number>
+    _(mixedNumericDictionary).pickBy(userDefinedTypeGuard); // $ExpectType LoDashImplicitWrapper<NumericDictionary<number>>
+    _.chain(mixedNumericDictionary).pickBy(userDefinedTypeGuard); // $ExpectType LoDashExplicitWrapper<NumericDictionary<number>>
+    fp.pickBy(userDefinedTypeGuard)(mixedNumericDictionary); // $ExpectType NumericDictionary<number>
 }
 
 // _.result

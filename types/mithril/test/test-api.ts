@@ -116,7 +116,7 @@ const FRAME_BUDGET = 100;
 
 {
 	// define a component
-	const Greeter: m.Comp<{ style: string }, {}> = {
+	const Greeter: m.Comp<{ style: string }> = {
 		view(vnode) {
 			return m("div", vnode.attrs, ["Hello ", vnode.children]);
 		}
@@ -142,7 +142,7 @@ const FRAME_BUDGET = 100;
 		});
 	};
 
-	m.render(document.body!, userInputs(users));
+	m.render(document.body, userInputs(users));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -191,7 +191,7 @@ const FRAME_BUDGET = 100;
 ////////////////////////////////////////////////////////////////////////////////
 
 {
-	const Fader: m.Comp<{}, {}> = {
+	const Fader: m.Comp = {
 		onbeforeremove(vnode) {
 			vnode.dom.classList.add("fade-out");
 			return new Promise(resolve => {
@@ -227,7 +227,7 @@ const FRAME_BUDGET = 100;
 		}
 	};
 
-	const Form: m.Comp<{term: string}, {}> = {
+	const Form: m.Comp<{term: string}> = {
 		oninit(vnode) {
 			state.term = vnode.attrs.term || ""; // populated from the `history.state` property if the user presses the back button
 		},
@@ -239,14 +239,14 @@ const FRAME_BUDGET = 100;
 		}
 	};
 
-	const Layout: m.Comp<{}, {}> = {
+	const Layout: m.Comp = {
 		view(vnode) {
 			return m(".layout", vnode.children);
 		}
 	};
 
 	// example 1
-	m.route(document.body!, "/", {
+	m.route(document.body, "/", {
 		"/": {
 			view() {
 				return m(Layout, m(Home));
@@ -260,7 +260,7 @@ const FRAME_BUDGET = 100;
 	});
 
 	// example 2
-	m.route(document.body!, "/", {
+	m.route(document.body, "/", {
 		"/": {
 			render() {
 				return m(Layout, m(Home));
@@ -285,7 +285,7 @@ const FRAME_BUDGET = 100;
 		},
 	};
 
-	m.route(document.body!, "/", {
+	m.route(document.body, "/", {
 		"/": {
 			render() {
 				return m(Anon1);
@@ -313,7 +313,7 @@ const FRAME_BUDGET = 100;
 		}
 	};
 
-	m.route(document.body!, "/user/list", {
+	m.route(document.body, "/user/list", {
 		"/user/list": {
 			onmatch: state.loadUsers,
 			render() {
@@ -330,7 +330,7 @@ const FRAME_BUDGET = 100;
 {
 	let progress = 0;
 
-	m.mount(document.body!, {
+	m.mount(document.body, {
 		view() {
 			return [
 				m("input[type=file]", { onchange: upload }),
@@ -396,7 +396,7 @@ const FRAME_BUDGET = 100;
 		deserialize: value => value
 	})
 	.then(svg => {
-		m.render(document.body!, m.trust(svg));
+		m.render(document.body, m.trust(svg));
 	});
 }
 
